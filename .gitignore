@@ -3,6 +3,8 @@
 /public/build
 /public/hot
 /public/storage
+/public/carouselimages/*
+/public/movieimages/*
 /storage/*.key
 /vendor
 .env

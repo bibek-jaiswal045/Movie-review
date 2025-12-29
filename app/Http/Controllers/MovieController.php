@@ -72,6 +72,12 @@ class MovieController extends Controller
                 'details' => 'required|min:50|max:2000',
             ]);
 
+            if(!is_dir(public_path('movieimages'))) {
+                mkdir(public_path('movieimages'), 0755, true);
+            }
+            if(!is_dir(public_path('carouselimages'))) {
+                mkdir(public_path('carouselimages'), 0755, true);
+            }
 
             $movieimage = null;
             if (request()->hasfile('image')) {
