@@ -139,29 +139,6 @@ The following are realistic improvements based on the current codebase:
 
 ---
 
-## What I couldn't determine confidently
-- Exact Socialite drivers to enable (the controller accepts a `{driver}` param, but provider settings and intended providers are not committed).
-- Production deployment strategy—no deployment scripts or CI workflows are present in the repository.
-
----
-
-If you want, I can also:
-- Add a CONTRIBUTING guide and PR templates
-- Add more tests (API and unit tests) or a GitHub Actions workflow for CI
-
------
-
-If you want this README tuned for a specific audience (e.g., hiring managers, students, or for a demo), tell me which audience and I'll adjust tone and detail. 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
 ## Learning Laravel
