@@ -1,14 +1,157 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Movie Review — Laravel Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Overview
 
-## About Laravel
+Movie Review is a Laravel-based web application for publishing and reviewing movies. It provides a public-facing site where visitors can browse published movies, view movie details, search movies, and leave ratings. Administrators can manage movies, casts, genres, carousel entries and statuses via an admin dashboard.
 
+Problem it solves
+- Provides a lightweight CMS for movie listings and a simple review/rating system.
+- Separates public browsing and admin management, with role-based access via a small `isAdmin` middleware.
+
+Who it's for
+- Developers: example app demonstrating Laravel resource controllers, file uploads, relations and Socialite integration.
+- Small teams or students: a starting point for a movie catalogue and review site.
+- Educators / portfolios: contains a full stack of features suitable for demonstrations or assignments.
+
+---
+
+## Features
+
+**Core (Public-facing)**
+- Browse published movies with pagination and search (movie title, details, casts) (`MovieWatchController@index`, `Movie::scopeFilter`).
+- Movie detail page with optional rating controls for authenticated non-admin users (`MovieWatchController@show`, `RatingController@newstore`).
+- Calendar view showing movies and statuses (`MovieWatchController@calendar`).
+
+**Authentication & User**
+- Full user registration, login, password reset, email verification and profile management (using Laravel Breeze-like auth controllers in `routes/auth.php`).
+- Social login via Laravel Socialite (drivers supported via `SocialiteController`).
+- Role flag `isAdmin` on users to gate administrative routes (`isAdmin` middleware).
+
+**Admin / Management**
+- Movie Management: create, edit, list, delete movies with image and carousel image uploads (`MovieController`).
+- Casts Management: add and remove casts (`CastController`).
+- Genres Management: add and remove genres (`GenreController`).
+- Carousel Management: select movies for the homepage carousel (`CarouselController`).
+- Statuses Management: add and remove statuses (`StatusController`).
+- Admin dashboard listing recent movies (`AdminController@index`).
+
+**Ratings**
+- Authenticated users (non-admins) can submit a rating (1–5) for a movie (`RatingController::newstore`) and delete their review (`RatingController::destroy`).
+
+**Testing**
+- Feature tests covering controllers and some auth flows are present under `tests/Feature`.
+
+---
+
+## Tech Stack
+
+- Languages: PHP (requires PHP ^8.1)
+- Frameworks & libraries:
+  - Laravel Framework (>= 10.x)
+  - Laravel Sanctum (installed)
+  - Laravel Socialite (social login)
+  - Laravel Breeze (auth scaffolding / view components present)
+- Frontend / build tools:
+  - Vite, Tailwind CSS, Alpine.js, Axios
+- Database: Eloquent with migrations (MySQL/Postgres/SQLite — DB type configurable via `.env`)
+- Dev & testing tools: PHPUnit (tests), Laravel Sail (dev container available in composer dev deps)
+
+---
+
+## Installation & Setup
+
+> NOTE: this project uses standard Laravel conventions. The steps below assume macOS / Linux or a compatible environment.
+
+Prerequisites
+- PHP ^8.1
+- Composer
+- Node.js (for frontend assets)
+- A database (MySQL, Postgres or SQLite)
+
+Setup (local)
+1. Clone the repository
+   ```bash
+   git clone <repo-url>
+   cd Movie-review
+   ```
+2. Install PHP dependencies
+   ```bash
+   composer install
+   ```
+3. Copy and configure environment
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   - Set your database connection in `.env` (DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD).
+4. Run database migrations and seeders (seeders exist in `database/seeders`)
+   ```bash
+   php artisan migrate --seed
+   ```
+5. Install frontend tooling and build assets
+   ```bash
+   npm install
+   npm run dev   # or `npm run build` for production
+   ```
+6. Start the local server
+   ```bash
+   php artisan serve
+   ```
+
+Running tests
+- Run PHPUnit tests:
+  ```bash
+  ./vendor/bin/phpunit
+  ```
+
+Environment notes
+- Social logins require driver configuration (client ID/secret) in `.env` (providers are wired through `SocialiteController`).
+- Image uploads are stored under `public/movieimages` and `public/carouselimages`.
+
+---
+
+## Folder Structure (high level)
+
+- `app/` — core application code (Controllers, Models, Middleware, Providers)
+  - `Http/Controllers` — resource controllers for movies, casts, genre, carousel, status, ratings, socialite
+  - `Models` — Eloquent models: `Movie`, `Rating`, `Carousel`, `Cast`, `Genre`, `Status`, `Socialite`, `User`
+  - `Http/Middleware/isAdmin.php` — middleware enforcing admin-only routes
+- `routes/` — application routes
+  - `web.php` — web routes (public, admin, socialite)
+  - `auth.php` — authentication routes (registration/login/password reset/verification)
+- `resources/views/` — Blade templates (client views, admin views, components)
+- `database/migrations/` and `database/seeders/` — schema and seed data
+- `public/` — web assets incl. `movieimages/` and `carouselimages/`
+- `tests/` — PHPUnit feature tests for controllers and authentication
+
+---
+
+## Future Scope & Recommendations
+
+The following are realistic improvements based on the current codebase:
+
+- API endpoints: implement RESTful API endpoints (with Sanctum token support) for movies, ratings and admin actions to support mobile or SPA clients.
+- Authorization: replace boolean `isAdmin` flag with Laravel Policies or a role-based system for finer-grained permissions.
+- File storage: move images to a cloud-backed storage (S3) using Laravel's Filesystem for scalability and backup.
+- Caching & performance: cache frequently-read pages (home, movie lists) and use eager-loading for relations to reduce DB queries.
+- Validation & UX: add server & client-side validation error display consistency, and improve multi-select UI for casts/genres.
+- Tests: expand unit tests and add API tests to cover more business logic and edge cases.
+
+---
+
+## What I couldn't determine confidently
+- Exact Socialite drivers to enable (the controller accepts a `{driver}` param, but provider settings and intended providers are not committed).
+- Production deployment strategy—no deployment scripts or CI workflows are present in the repository.
+
+---
+
+If you want, I can also:
+- Add a CONTRIBUTING guide and PR templates
+- Add more tests (API and unit tests) or a GitHub Actions workflow for CI
+
+-----
+
+If you want this README tuned for a specific audience (e.g., hiring managers, students, or for a demo), tell me which audience and I'll adjust tone and detail. 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
 - [Simple, fast routing engine](https://laravel.com/docs/routing).
